@@ -21,6 +21,9 @@ public class EditTitleActivity extends AppCompatActivity {
   // in onCreate() set `this.isEditing` to `true` once the user starts editing, set to `false` once done editing
   // in onBackPressed() check `if(this.isEditing)` to understand what to do
 
+  private boolean isEditing = false;
+  private boolean firstEdit = true;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -40,6 +43,8 @@ public class EditTitleActivity extends AppCompatActivity {
     editTextTitle.setText("Page title here");
     editTextTitle.setVisibility(View.GONE);
 
+
+
     // handle clicks on "start edit"
     fabStartEdit.setOnClickListener(v -> {
       /*
@@ -47,17 +52,66 @@ public class EditTitleActivity extends AppCompatActivity {
       1. animate out the "start edit" FAB
       2. animate in the "done edit" FAB
       3. hide the static title (text-view)
-      4. show the editable title (edit-text)
+      4. show the editable ;title (edit-text)
       5. make sure the editable title's text is the same as the static one
       6. optional (HARD!) make the keyboard to open with the edit-text focused,
           so the user can start typing without the need another click on the edit-text
 
       to complete (1.) & (2.), start by just changing visibility. only add animations after everything else is ready
        */
-    });
+      if (!firstEdit) {
+        String userInput = textViewTitle.getText().toString();
+        editTextTitle.setText(userInput);
+      }
+      if (firstEdit) {
+        editTextTitle.getText().clear();
+      }
+      this.isEditing = true;
+      fabStartEdit.animate()
+              .alpha(0f)
+              .start();
+
+      //fabEditDone.setAlpha(0f);
+      fabEditDone.animate()
+              .alpha(1f)
+              .start();
+
+      textViewTitle.setVisibility(View.INVISIBLE);
+      fabEditDone.setVisibility(View.VISIBLE);
+      fabStartEdit.setVisibility(View.INVISIBLE);
+      editTextTitle.setVisibility(View.VISIBLE);
+      this.isEditing = false;
+      this.firstEdit = false;
+    }
+    );
 
     // handle clicks on "done edit"
     fabEditDone.setOnClickListener(v -> {
+      this.isEditing = false;
+
+      fabEditDone.animate()
+              .alpha(0f)
+              .start();
+
+      fabStartEdit.setAlpha(0f);
+      fabStartEdit.animate()
+              .alpha(1f)
+              .start();
+
+      fabEditDone.setVisibility(View.INVISIBLE);
+      fabStartEdit.setVisibility(View.VISIBLE);
+
+      String userInput = editTextTitle.getText().toString();
+
+      textViewTitle.setText(userInput);
+
+      textViewTitle.setVisibility(View.VISIBLE);
+
+      editTextTitle.setVisibility(View.INVISIBLE);
+
+      this.isEditing = true;
+
+
       /*
       TODO:
       1. animate out the "done edit" FAB
@@ -74,10 +128,35 @@ public class EditTitleActivity extends AppCompatActivity {
 
   @Override
   public void onBackPressed() {
-    // BACK button was clicked
-    /*
+    if (isEditing) {
+      FloatingActionButton fabStartEdit = findViewById(R.id.fab_start_edit);
+      TextView textViewTitle = findViewById(R.id.textViewPageTitle);
+      EditText editTextTitle = findViewById(R.id.editTextPageTitle);
+      FloatingActionButton fabEditDone = findViewById(R.id.fab_edit_done);
+      fabEditDone.animate()
+              .alpha(0f)
+              .start();
+
+      fabStartEdit.setAlpha(0f);
+      fabStartEdit.animate()
+              .alpha(1f)
+              .start();
+
+      fabEditDone.setVisibility(View.INVISIBLE);
+      fabStartEdit.setVisibility(View.VISIBLE);
+
+      editTextTitle.setVisibility(View.INVISIBLE);
+
+      textViewTitle.setVisibility(View.VISIBLE);
+
+    }
+    if (!isEditing) {
+      super.onBackPressed();
+    }
+}
+/*
     TODO:
-    if user is now editing, tap on BACK will revert the edit. do the following:
+    if user is now editing, tap on B will revert the edit. do the following:
     1. hide the edit-text
     2. show the static text-view with previous text (discard user's input)
     3. animate out the "done-edit" FAB
@@ -90,5 +169,6 @@ public class EditTitleActivity extends AppCompatActivity {
     to work with views, you will need to find them first.
     to find views call `findViewById()` in a same way like in `onCreate()`
      */
+
   }
-}
+//}
