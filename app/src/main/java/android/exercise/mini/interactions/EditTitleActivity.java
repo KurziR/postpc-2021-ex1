@@ -48,7 +48,7 @@ public class EditTitleActivity extends AppCompatActivity {
     // handle clicks on "start edit"
     fabStartEdit.setOnClickListener(v -> {
       /*
-      TODO:
+      ODO:
       1. animate out the "start edit" FAB
       2. animate in the "done edit" FAB
       3. hide the static title (text-view)
@@ -59,35 +59,42 @@ public class EditTitleActivity extends AppCompatActivity {
 
       to complete (1.) & (2.), start by just changing visibility. only add animations after everything else is ready
        */
-      if (!firstEdit) {
+      if (!this.firstEdit) {
         String userInput = textViewTitle.getText().toString();
         editTextTitle.setText(userInput);
       }
-      if (firstEdit) {
+      if (this.firstEdit) {
         editTextTitle.getText().clear();
       }
-      this.isEditing = true;
+
+      textViewTitle.setVisibility(View.GONE);
+      fabEditDone.setVisibility(View.VISIBLE);
+      fabStartEdit.setVisibility(View.GONE);
+      editTextTitle.setVisibility(View.VISIBLE);
+
       fabStartEdit.animate()
               .alpha(0f)
               .start();
 
-      //fabEditDone.setAlpha(0f);
+      fabEditDone.setAlpha(0f);
       fabEditDone.animate()
               .alpha(1f)
               .start();
 
-      textViewTitle.setVisibility(View.INVISIBLE);
-      fabEditDone.setVisibility(View.VISIBLE);
-      fabStartEdit.setVisibility(View.INVISIBLE);
-      editTextTitle.setVisibility(View.VISIBLE);
-      this.isEditing = false;
-      this.firstEdit = false;
-    }
-    );
+      this.isEditing = true;
+    });
 
     // handle clicks on "done edit"
     fabEditDone.setOnClickListener(v -> {
-      this.isEditing = false;
+      this.firstEdit = false;
+      fabEditDone.setVisibility(View.GONE);
+      fabStartEdit.setVisibility(View.VISIBLE);
+
+      String userInput = editTextTitle.getText().toString();
+      textViewTitle.setText(userInput);
+
+      editTextTitle.setVisibility(View.GONE);
+      textViewTitle.setVisibility(View.VISIBLE);
 
       fabEditDone.animate()
               .alpha(0f)
@@ -98,22 +105,9 @@ public class EditTitleActivity extends AppCompatActivity {
               .alpha(1f)
               .start();
 
-      fabEditDone.setVisibility(View.INVISIBLE);
-      fabStartEdit.setVisibility(View.VISIBLE);
-
-      String userInput = editTextTitle.getText().toString();
-
-      textViewTitle.setText(userInput);
-
-      textViewTitle.setVisibility(View.VISIBLE);
-
-      editTextTitle.setVisibility(View.INVISIBLE);
-
-      this.isEditing = true;
-
-
+      this.isEditing = false;
       /*
-      TODO:
+      ODO:
       1. animate out the "done edit" FAB
       2. animate in the "start edit" FAB
       3. take the text from the user's input in the edit-text and put it inside the static text-view
@@ -128,11 +122,17 @@ public class EditTitleActivity extends AppCompatActivity {
 
   @Override
   public void onBackPressed() {
-    if (isEditing) {
+    if (this.isEditing) {
       FloatingActionButton fabStartEdit = findViewById(R.id.fab_start_edit);
+      FloatingActionButton fabEditDone = findViewById(R.id.fab_edit_done);
       TextView textViewTitle = findViewById(R.id.textViewPageTitle);
       EditText editTextTitle = findViewById(R.id.editTextPageTitle);
-      FloatingActionButton fabEditDone = findViewById(R.id.fab_edit_done);
+
+      editTextTitle.setVisibility(View.GONE);
+      textViewTitle.setVisibility(View.VISIBLE);
+      fabEditDone.setVisibility(View.GONE);
+      fabStartEdit.setVisibility(View.VISIBLE);
+
       fabEditDone.animate()
               .alpha(0f)
               .start();
@@ -141,21 +141,13 @@ public class EditTitleActivity extends AppCompatActivity {
       fabStartEdit.animate()
               .alpha(1f)
               .start();
-
-      fabEditDone.setVisibility(View.INVISIBLE);
-      fabStartEdit.setVisibility(View.VISIBLE);
-
-      editTextTitle.setVisibility(View.INVISIBLE);
-
-      textViewTitle.setVisibility(View.VISIBLE);
-
     }
-    if (!isEditing) {
+    else {
       super.onBackPressed();
     }
 }
 /*
-    TODO:
+    ODO:
     if user is now editing, tap on B will revert the edit. do the following:
     1. hide the edit-text
     2. show the static text-view with previous text (discard user's input)
