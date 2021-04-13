@@ -23,7 +23,6 @@ public class EditTitleActivity extends AppCompatActivity {
 
   private boolean isEditing = false;
   private boolean firstEdit = true;
-  private boolean banana = true;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
