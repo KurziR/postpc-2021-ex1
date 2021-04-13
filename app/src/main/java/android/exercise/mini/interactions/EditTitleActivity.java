@@ -23,6 +23,7 @@ public class EditTitleActivity extends AppCompatActivity {
 
   private boolean isEditing = false;
   private boolean firstEdit = true;
+  private boolean banana = true;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class EditTitleActivity extends AppCompatActivity {
       if (this.firstEdit) {
         editTextTitle.getText().clear();
       }
-
+      editTextTitle.setText(textViewTitle.getText().toString());
       textViewTitle.setVisibility(View.GONE);
       fabEditDone.setVisibility(View.VISIBLE);
       fabStartEdit.setVisibility(View.GONE);
@@ -86,7 +87,7 @@ public class EditTitleActivity extends AppCompatActivity {
 
     // handle clicks on "done edit"
     fabEditDone.setOnClickListener(v -> {
-      this.firstEdit = false;
+      //this.firstEdit = false;
       fabEditDone.setVisibility(View.GONE);
       fabStartEdit.setVisibility(View.VISIBLE);
 
@@ -141,6 +142,7 @@ public class EditTitleActivity extends AppCompatActivity {
       fabStartEdit.animate()
               .alpha(1f)
               .start();
+
     }
     else {
       super.onBackPressed();
